@@ -236,7 +236,6 @@ def lint_head_commit_mesasge(
                              ):
     """Uses LLM to generate an improved README file."""
 
-    git_config_info = get_git_config(repo_dir)
     owner, repo = get_owner_and_repo_from_git_config(repo_dir)
     head_commit = get_head_commit(repo_dir)
 
@@ -245,7 +244,7 @@ def lint_head_commit_mesasge(
     print("")
 
     prompt = f"""
-You are an expert in Git commit message standards. Act as a strict linter and helpful coach.
+You are an expert in Git commit message standards. Act as a strict linter.
 
 The commit_message is:
 {head_commit}
@@ -258,43 +257,6 @@ REQUIREMENTS
    - "Code Review: <number>"
    - "PR: <number>" (accept "Pull Request: <number>" as equivalent, but normalize to "PR: <number>")
 3) If a number is missing or unknown, use "<please_fill_in>" (do NOT invent).
-4) Ensure exactly one blank line between title and body in the fixed message.
-5) Preserve meaning; you MAY tighten wording, fix grammar, and prefer imperative mood for the title.
-6) Detect PR via lines starting with "PR:" or "Pull Request:"; detect Code Review via lines starting with "Code Review:" (all case-insensitive; ignore surrounding whitespace).
-7) Do not output anything except a single JSON object (no code fences, no extra prose).
-
-
-OUTPUT FORMAT (single s object only)
-\{
-  "verdict": "pass" | "fail",
-  "title_length": <integer>,
-  "title_status": "ok" | "too_long",
-  "has_pr": <true|false>,
-  "has_code_review": <true|false>,
-
-  "suggestions": [
-    "Actionable bullet #1",
-    "Actionable bullet #2"
-  ],
-
-  "fixed_message": \{
-    "title": "<rewritten concise, imperative title (≤53 chars)>",
-    "body": "<rewritten body (no metadata lines), preserving meaning>",
-    "code_review": "<number or <please_fill_in>>",
-    "pr": "<number or <please_fill_in>>",
-    "full_text": "Title\n\nBody\nCode Review: <...>\nPR: <...>"
-  \}
-}
-
-EVALUATION STEPS (for you to follow before emitting JSON)
-- Parse title as the first non-empty line. Count characters exactly (no trimming for count).
-- Check for a blank line after the title in the original; enforce exactly one in the fixed message.
-- Search the body for PR and Code Review lines as specified (case-insensitive).
-- When normalizing, always output:
-  Code Review: <value>
-  PR: <value>
-- If no body exists, synthesize a minimal one-sentence rationale (why), then append the two metadata lines.
-
 
 """
 
