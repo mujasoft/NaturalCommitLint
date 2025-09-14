@@ -4,6 +4,10 @@ AI-powered commit message linter with customizable rules.
 
 Built using Python, Typer, Rich, and Ollama (local LLMs).
 
+## Demo
+
+![Demo GIF](demo.gif)
+
 ## Overview
 
 `llmlinter` enforces consistent and high-quality Git commit messages using a locally running LLM. It reads the HEAD commit, applies a set of user-defined rules, and provides a verdict: `LINT_PASS` or `LINT_FAIL`.
