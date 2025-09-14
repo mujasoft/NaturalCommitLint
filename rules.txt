@@ -1,0 +1,5 @@
+1) Title (first line) MUST be strictly < 54 characters (i.e., max 53).
+2) Body MUST include BOTH metadata lines (case-insensitive detection; normalize in fix):
+   - "Code Review: <number>"
+   - "PR: <number>" (accept "Pull Request: <number>" as equivalent, but normalize to "PR: <number>")
+3) If a number is missing or unknown, use "<please_fill_in>" (do NOT invent).

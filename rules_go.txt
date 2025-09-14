@@ -1,0 +1,33 @@
+# Subject / Title (first line)
+- Must begin with the name of the **package** affected, followed by a colon and space.
+  e.g. `net/http: handle foo when bar`
+- Use lowercase verb for the subject after the colon.
+- No trailing period `.` at the end of the subject line.
+- Keep it short. ~76 characters or less is preferred by tooling; subject should be as concise as possible.
+- Use the form: “this change modifies Go to ___” — i.e. complete the blank: describes how the code is changed.
+
+# Body
+- If present, separate subject from body by a blank line.
+- Body lines should be wrapped at ~76 characters.
+- The body should explain *why* the change was made, and what problem it fixes or addresses.
+- Do **not** use Markdown formatting in the body (no markdown lists, headings, etc.).
+
+# Footer / References
+- If the change fixes an issue, include `Fixes #<issue_number>` on its own line after a blank line (after the body). (A trailing period is acceptable but not required.) :contentReference[oaicite:1]{index=1}
+- If referencing an issue more generally (without completely fixing), use `For #<issue_number>` instead. :contentReference[oaicite:2]{index=2}
+
+# General Style
+- Do **not** use `Signed-off-by` lines; not needed. :contentReference[oaicite:3]{index=3}
+- Avoid alternate aliases like “Close”, “Resolves” instead of “Fixes”. Use “Fixes” if linking to fix. :contentReference[oaicite:4]{index=4}
+- When moving code between repos, include the CL, repository, and git hash for traceability. :contentReference[oaicite:5]{index=5}
+
+# Summary / Length & Formatting
+- Subject should be as short as possible; many tools prefer ~76 characters max for subject. :contentReference[oaicite:6]{index=6}
+- For body, wrap at ~76 characters. :contentReference[oaicite:7]{index=7}
+- Leave a blank line between subject and body; another blank line before `Fixes` or `For` footer. :contentReference[oaicite:8]{index=8}
+
+# Tense / Mood
+- Use present tense / imperative mood in subject. i.e. “handle foo when bar”, not “handled” or “handling”. :contentReference[oaicite:9]{index=9}
+- Use lowercase after the colon (subject verb) in the first line. :contentReference[oaicite:10]{index=10}
+
+
