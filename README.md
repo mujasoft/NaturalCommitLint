@@ -4,7 +4,6 @@ AI-powered commit message linter with customizable rules.
 
 Built using Python, Typer, Rich, and Ollama (local LLMs).
 
----
 ## Overview
 
 `llmlinter` enforces consistent and high-quality Git commit messages using a locally running LLM. It reads the HEAD commit, applies a set of user-defined rules, and provides a verdict: `LINT_PASS` or `LINT_FAIL`.
@@ -15,11 +14,8 @@ At the moment, this tool only analyzes the HEAD.
 
 This tool is designed for use in both local development and CI pipelines.
 
----
 ## Why was this made?
 A lot of tools exist to lint commits but I wondered what would happen if we allowed a LLM to lint the commit for us? One big advantage is that the LLM takes care of analysing how to detect linting violations which makes it very extensible across different codebases.
-
----
 
 ## Features
 
@@ -28,8 +24,6 @@ A lot of tools exist to lint commits but I wondered what would happen if we allo
 - Supports customizable rules defined in a plain text file
 - Provides human-readable CLI output using Rich
 - Writes results to a file if needed
-
----
 
 ## Installation
 
@@ -46,8 +40,6 @@ cd llmlinter
 pip install -r requirements.txt
 ```
 
----
-
 ## Usage
 
 ```bash
@@ -63,7 +55,6 @@ llmlinter lint-head-commit-message   --repo-dir /path/to/git/repo   --rules-file
 | `--model`         | Name of the Ollama model to use (default: llama3) |
 | `--output`        | Optional path to save the linter output to a file |
 
----
 
 ## Example Rules File
 
@@ -80,7 +71,6 @@ Below is an example `rules.txt` based on the Go project's commit message guideli
 
 You can customize this file to match the standards of any repository.
 
----
 
 ## Sample Output
 
@@ -97,28 +87,22 @@ net/http: handle timeout propagation in roundtripper
 Verdict: LINT_FAIL
 ```
 
----
-
 ## Development Notes
 
 This tool uses Typer for command-line interface, Rich for styled output, and Ollama to run local LLM inference. The linting prompt is dynamically constructed using the latest commit message and the contents of your `rules.txt`.
 
 The verdict is extracted from the LLM output and must contain either `LINT_PASS` or `LINT_FAIL` for correct display.
 
----
 
 ## FUTURE WORK
 - Lint n commits
 - Lint a specific commit
 
----
 
 ## License
 
 This project is licensed under the [MIT License](LICENSE).
 
----
-
 ## Contributing
 
-Pull requests and issues are welcome. Please ensure that your commit messages are linted using this tool before submitting.
+Pull requests and issues are welcome.
