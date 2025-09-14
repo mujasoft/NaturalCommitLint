@@ -25,13 +25,12 @@ import configparser
 import json
 import os
 import re
+import subprocess
 import sys
 from pathlib import Path
 
-import typer
-import subprocess
-
 import ollama
+import typer
 
 from rich import print
 from rich.console import Console
@@ -83,7 +82,7 @@ def send_prompt_to_LLM(prompt: str, model: str = "llama3") -> str:
         str: response from LLM.
     """
 
-    with console.status("[bold green]Analyzing your commit message with LLM...[/]"):
+    with console.status("[bold cyan]Analyzing your HEAD with LLM...[/]"):
         response = ollama.chat(
             model=model,
             messages=[
@@ -141,7 +140,7 @@ def get_head_commit(repo_dir: str) -> str:
     Returns:
         str: head commit message
     """
-    cmd = f'cd "{repo_dir}" && git show HEAD --name-only'
+    cmd = f'cd "{repo_dir}" && git log -n 1 --pretty="%B"'
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True,
                             check=True)
     return result.stdout.strip()
@@ -244,10 +243,10 @@ def print_linter_output(results: str, repo: str):
 
     # Smart verdict detection (customize if needed)
     if "LINT_FAIL" in results:
-        verdict_style = "bold red"
+        verdict_style = "red"
         verdict_text = "❌ Commit message needs revision."
     else:
-        verdict_style = "bold green"
+        verdict_style = "green"
         verdict_text = "✅ Commit message passed all lint checks."
 
     # Main output panel
@@ -255,12 +254,13 @@ def print_linter_output(results: str, repo: str):
         results,
         title=f"Lint Output for \"{repo}\"",
         subtitle="Powered by LLM",
-        style="green"
+        style=verdict_style
     ))
 
     # Verdict summary
     console.print()
-    console.print(Panel(verdict_text, title="Verdict", style=verdict_style))
+    console.print(Panel(verdict_text, title="Verdict", style="bold "
+                        + verdict_style))
 
 
 @app.command()
@@ -283,16 +283,25 @@ def lint_head_commit_message(
     print("")
     console.print(
                   Panel.fit(f"{head_commit}",
-                            title=f"Head Commit for \"{repo}\"",
-                            subtitle="This commit will be reviewed",
+                            title=f"[cyan]Head Commit for \"{repo}\"[/]",
                             style="cyan")
                  )
     print("")
     prompt = f"""
-You are an expert in Git commit message standards. Act as a strict linter.
+You are a Git commit message reviewer. Your goal is to evaluate whether the latest commit message follows all defined rules. Your tone should be formal, concise, and constructive. Do not use exclamation marks, emojis, or overly friendly phrasing.
+
+Use the following structure:
+1. Title Analysis
+2. Body Analysis
+3. Rule Compliance Summary
+4. Verdict (must be: LINT_PASS or LINT_FAIL)
+
+Output should be plain text, with brief reasoning for each rule's status. Mark rule status clearly (e.g., PASS / FAIL) in uppercase.
 
 The commit_message is:
+----
 {head_commit}
+---
 """
     rules = read_text(rules_filepath)
 
@@ -301,8 +310,7 @@ REQUIREMENTS
 {rules}
 
 Give a verdict in the form "LINT_FAIL | LINT_PASS" . The verdict should be the
-final line. E.g. 'Verdict: LINT_FAIL'. Talk in the third person.
-Be professional.
+final line. E.g. 'Verdict: LINT_FAIL'.
 """
 
     # AI an hallucinate and act unpredictably so try multiple times.
@@ -323,6 +331,9 @@ Be professional.
 
     console.print("[bold yellow]WARNING: Please double-check since"
                   " LLMs can still make mistakes.[/]")
+
+    if "LINT_FAIL" in results:
+        sys.exit()
 
 
 if __name__ == "__main__":
