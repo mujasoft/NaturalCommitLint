@@ -41,8 +41,7 @@ from rich.panel import Panel
 
 
 app = typer.Typer(
-    help="AI powered tool to review and enhance READMEs for better"
-         " communication."
+    help="AI powered tool to lint commit messages."
 )
 
 console = Console()
@@ -175,7 +174,7 @@ def extract_changes_made_block(text: str) -> list:
 
 
 def validate_setup(repo_dir):
-    """Fail if repo_dir doesn't exist or README.md is not there".
+    """Fail if repo_dir doesn't exist or .git is not there".
 
     Args:
         repo_dir (str): location of repo.
@@ -187,8 +186,8 @@ def validate_setup(repo_dir):
     if not os.path.exists(repo_dir):
         sys.exit(f"ERROR: \"{repo_dir}\" does not exist.")
 
-    if not os.path.exists(os.path.join(repo_dir, "README.md")):
-        sys.exit("ERROR: Please ensure there is a README.md in your repo.")
+    if not os.path.exists(os.path.join(repo_dir, ".git")):
+        sys.exit("ERROR: This is not a git repo!")
 
 
 def get_owner_and_repo_from_git_config(repo_dir):
@@ -224,51 +223,91 @@ def get_owner_and_repo_from_git_config(repo_dir):
     else:
         print("Could not parse GitHub owner/repo from URL.")
         return None, None
+
+def print_linter_output(results: str, repo: str):
+    """Format and render the LLM output with structured styling."""
+    results = results.strip()
     
+    # Smart verdict detection (customize if needed)
+    if  "LINT_FAIL" in results:
+        verdict_style = "bold red"
+        verdict_text = "❌ Commit message needs revision."
+    else:
+        verdict_style = "bold green"
+        verdict_text = "✅ Commit message passed all lint checks."
+
+    # Main output panel
+    console.print(Panel.fit(
+        results,
+        title=f"Lint Output for \"{repo}\"",
+        subtitle="Powered by LLM",
+        style="green"
+    ))
+
+    # Verdict summary
+    console.print()
+    console.print(Panel(verdict_text, title="Verdict", style=verdict_style))
+
 @app.command()
-def lint_head_commit_mesasge(
+def lint_head_commit_message(
     repo_dir: str = typer.Option(None, "--repo-dir", "-r",
                                  help="Location of where the repo is cloned."),
-    output: str = typer.Option("output_readme.md", "--output", "-o",
+    rules_filepath: str = typer.Option("rules.txt", "--rules-file", "-f",
+                                       help="Location of where your rules"
+                                            "reside as a txt file"),
+    output: str = typer.Option(None, "--output", "-o",
                                help="Location of where to save"
-                                    " formula file."),
+                                    "llm powered output to a text file."),
     model: str = typer.Option("llama3", "--model", "-m", help="Name of model.")
                              ):
-    """Uses LLM to generate an improved README file."""
+    """Uses LLM to lint git commit message."""
 
     owner, repo = get_owner_and_repo_from_git_config(repo_dir)
     head_commit = get_head_commit(repo_dir)
 
-    print("We are working on:")
-    print(head_commit)
     print("")
-
+    console.print(
+                  Panel.fit(f"{head_commit}",
+                            title=f"Head Commit for \"{repo}\"",
+                            subtitle="This commit will be reviewed",
+                            style="cyan")
+                 )
+    print("")
     prompt = f"""
 You are an expert in Git commit message standards. Act as a strict linter.
 
 The commit_message is:
 {head_commit}
 """
+    rules = read_text(rules_filepath)
 
-    prompt += """
+    prompt += f"""
 REQUIREMENTS
-1) Title (first line) MUST be strictly < 54 characters (i.e., max 53).
-2) Body MUST include BOTH metadata lines (case-insensitive detection; normalize in fix):
-   - "Code Review: <number>"
-   - "PR: <number>" (accept "Pull Request: <number>" as equivalent, but normalize to "PR: <number>")
-3) If a number is missing or unknown, use "<please_fill_in>" (do NOT invent).
+{rules}
 
+Give a verdict in the form "LINT_FAIL | LINT_PASS" . The verdict should be the
+final line. E.g. 'Verdict: LINT_FAIL'. Talk in the third person.
+Be professional.
 """
 
     # AI an hallucinate and act unpredictably so try multiple times.
     no_of_attempts = 3
     for x in range(no_of_attempts):
         results = send_prompt_to_LLM(prompt, model)
-        print(results)
-        break
+
+        if results.strip():
+
+            break
 
     print()
+    print_linter_output(results, repo)
+
+    if output is not None:
+        with open(output, 'a+',  encoding='utf-8') as f:
+            f.write(results.strip() + "\n\n")
+
     console.print("[bold yellow]WARNING: Please double-check since"
-                  " LLMs can make still make mistakes.[/]")
+                  " LLMs can still make mistakes.[/]")
+    
 if __name__ == "__main__":
     app()
