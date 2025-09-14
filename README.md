@@ -1,8 +1,13 @@
 # llmlinter
+![Python](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python&logoColor=white)
+![Typer](https://img.shields.io/badge/CLI-Typer-blueviolet)
+![Rich](https://img.shields.io/badge/UI-Rich-forestgreen)
+![Ollama](https://img.shields.io/badge/LLM-Ollama-yellowgreen)
+![License](https://img.shields.io/badge/License-MIT-brightgreen)
+![Status](https://img.shields.io/badge/Linting-AI--Powered-success)
+
 
 AI-powered commit message linter with customizable rules.
-
-Built using Python, Typer, Rich, and Ollama (local LLMs).
 
 ## Demo
 
@@ -13,7 +18,6 @@ Built using Python, Typer, Rich, and Ollama (local LLMs).
 `llmlinter` enforces consistent and high-quality Git commit messages using a locally running LLM. It reads the HEAD commit, applies a set of user-defined rules, and provides a verdict: `LINT_PASS` or `LINT_FAIL`.
 
 The LLM is instructed to include one of these tokens in its final response, which is then parsed by the tool.
-
 At the moment, this tool only analyzes the HEAD.
 
 This tool is designed for use in both local development and CI pipelines.
@@ -39,9 +43,9 @@ Requirements:
 Clone the repository and install dependencies:
 
 ```bash
-git clone https://github.com/mujasoft/llmlinter.git
+git clone git@github.com:mujasoft/llmlinter.git
 cd llmlinter
-pip install -r requirements.txt
+pip3 install -r requirements.txt
 ```
 
 ## Usage
@@ -77,7 +81,7 @@ pip install -r requirements.txt
 
 ## Example Rules File
 
-Below is an example `rules.txt` based on the Go project's commit message guidelines:
+Below is an example `rules.txt`
 
 ```text
 1) Title (first line) MUST be strictly < 54 characters (i.e., max 53).
@@ -170,10 +174,10 @@ This tool uses Typer for command-line interface, Rich for styled output, and Oll
 The verdict is extracted from the LLM output and must contain either `LINT_PASS` or `LINT_FAIL` for correct display.
 
 
-## FUTURE WORK
+## To-do
 - Lint n commits
 - Lint a specific commit
-
+- Add autoamted testing
 
 ## License
 
