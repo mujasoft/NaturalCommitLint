@@ -28,9 +28,7 @@ import re
 import sys
 from pathlib import Path
 
-import requests
 import typer
-import shlex
 import subprocess
 
 import ollama
@@ -59,6 +57,7 @@ def read_text(filepath):
 
     with open(filepath, 'r', encoding='utf-8') as f:
         return f.read()
+
 
 def get_git_config(repo_dir):
     """Returns content of .git/config from repo.
@@ -124,8 +123,7 @@ def get_real_path(filepath: str) -> str:
 
 
 def extract_markdown_block(text: str) -> str:
-    """
-    Extracts the first markdown code block from a string.
+    """Extracts the first markdown code block from a string.
 
     Returns the markdown code as a string.
     """
@@ -133,18 +131,32 @@ def extract_markdown_block(text: str) -> str:
     match = re.search(pattern, text, re.DOTALL)
     return match.group(1).strip() if match else ""
 
+
 def get_head_commit(repo_dir: str) -> str:
+    """Obtain head commit message from a git repo.
+
+    Args:
+        repo_dir (str): Location to git repo.
+
+    Returns:
+        str: head commit message
+    """
     cmd = f'cd "{repo_dir}" && git show HEAD --name-only'
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True,
                             check=True)
     return result.stdout.strip()
 
-def extract_text_block(text: str) -> str:
-    """
-    Extracts the first markdown code block from a string.
 
-    Returns the markdown code as a string.
+def extract_text_block(text: str) -> str:
+    """Extracts the first markdown code block from a string.
+
+    Args:
+        text (str): gets a text block
+
+    Returns:
+        str: Returns the markdown code as a string.
     """
+
     pattern = r"```text\n(.*?)```"
     match = re.search(pattern, text, re.DOTALL)
     return match.group(1).strip() if match else ""
@@ -224,12 +236,14 @@ def get_owner_and_repo_from_git_config(repo_dir):
         print("Could not parse GitHub owner/repo from URL.")
         return None, None
 
+
 def print_linter_output(results: str, repo: str):
     """Format and render the LLM output with structured styling."""
+
     results = results.strip()
-    
+
     # Smart verdict detection (customize if needed)
-    if  "LINT_FAIL" in results:
+    if "LINT_FAIL" in results:
         verdict_style = "bold red"
         verdict_text = "❌ Commit message needs revision."
     else:
@@ -248,6 +262,7 @@ def print_linter_output(results: str, repo: str):
     console.print()
     console.print(Panel(verdict_text, title="Verdict", style=verdict_style))
 
+
 @app.command()
 def lint_head_commit_message(
     repo_dir: str = typer.Option(None, "--repo-dir", "-r",
@@ -260,7 +275,7 @@ def lint_head_commit_message(
                                     "llm powered output to a text file."),
     model: str = typer.Option("llama3", "--model", "-m", help="Name of model.")
                              ):
-    """Uses LLM to lint git commit message."""
+    """Uses LLM to lint HEAD commit message."""
 
     owner, repo = get_owner_and_repo_from_git_config(repo_dir)
     head_commit = get_head_commit(repo_dir)
@@ -308,6 +323,7 @@ Be professional.
 
     console.print("[bold yellow]WARNING: Please double-check since"
                   " LLMs can still make mistakes.[/]")
-    
+
+
 if __name__ == "__main__":
     app()
