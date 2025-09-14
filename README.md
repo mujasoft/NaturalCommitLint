@@ -177,7 +177,7 @@ The verdict is extracted from the LLM output and must contain either `LINT_PASS`
 ## To-do
 - Lint n commits
 - Lint a specific commit
-- Add autoamted testing
+- Add automated testing
 
 ## License
 
