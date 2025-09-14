@@ -94,7 +94,7 @@ Below is an example `rules.txt`
 
 You can customize this file to match the standards of any repository.
 
-
+The name of the file is not hardcoded. You can keep multiple different text files containing rules.
 ## Sample Output
 
 ```
