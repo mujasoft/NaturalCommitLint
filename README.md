@@ -47,17 +47,32 @@ pip install -r requirements.txt
 ## Usage
 
 ```bash
-llmlinter lint-head-commit-message   --repo-dir /path/to/git/repo   --rules-file rules.txt   --model llama3   --output lint_results.txt
+ Usage: llmlinter.py [OPTIONS]
+
+ Uses LLM to lint HEAD commit message.
+
+
+╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --repo-dir            -r      TEXT  Location of where the repo is cloned. [default: None]                                                          │
+│ --rules-file          -f      TEXT  Location of where your rulesreside as a txt file [default: rules.txt]                                          │
+│ --output              -o      TEXT  Location of where to savellm powered output to a text file. [default: None]                                    │
+│ --model               -m      TEXT  Name of model. [default: llama3]                                                                               │
+│ --install-completion                Install completion for the current shell.                                                                      │
+│ --show-completion                   Show completion for the current shell, to copy it or customize the installation.                               │
+│ --help                              Show this message and exit.                                                                                    │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+
+
 ```
 
 ### Arguments
 
 | Option            | Description                                       |
 |-------------------|---------------------------------------------------|
-| `--repo-dir`      | Path to your local Git repository                 |
-| `--rules-file`    | Path to a text file containing linting rules      |
-| `--model`         | Name of the Ollama model to use (default: llama3) |
-| `--output`        | Optional path to save the linter output to a file |
+| `--repo-dir`, `-r`    | Path to your local Git repository                 |
+| `--rules-file`, `-f`   | Path to a text file containing linting rules      |
+| `--model`, `-m`        | Name of the Ollama model to use (default: llama3) |
+| `--output`, `-o`        | Optional path to save the linter output to a file |
 
 
 ## Example Rules File
@@ -79,16 +94,73 @@ You can customize this file to match the standards of any repository.
 ## Sample Output
 
 ```
-Head Commit for "mujasoft/llmlinter"
--------------------------------------
 
-net/http: handle timeout propagation in roundtripper
+╭────────────────────────────────── Head Commit for "go" ───────────────────────────────────╮
+│ cmd/go/internal/work: copy vet tool's stdout to our stdout                                │
+│                                                                                           │
+│ The go command connects both the stdout and stderr files of                               │
+│ its child commands (cmd/compile, cmd/vet, etc) to the go                                  │
+│ command's own stderr. If the child command is supposed to                                 │
+│ produce structure output on stderr, as is the case for                                    │
+│ go vet -json or go fix -diff, it will be merged with the                                  │
+│ error stream, making it useless.                                                          │
+│                                                                                           │
+│ This change to the go vet <-> unitchecker protocol specifies                              │
+│ the name of a file into which the vet tool should write its                               │
+│ stdout. On success, the go command will then copy the entire                              │
+│ content of that file to its own stdout, under a lock.                                     │
+│ This ensures that partial writes to stdout in case of failure,                            │
+│ concurrent writes to stdout by parallel vet tasks, or other                               │
+│ junk on stderr, cannot interfere with the integrity of the                                │
+│ go command's structure output on stdout.                                                  │
+│                                                                                           │
+│ CL 702835 is the corresponding change on the x/tools side.                                │
+│                                                                                           │
+│ For #75432                                                                                │
+│                                                                                           │
+│ Change-Id: Ib4db25b6b0095d359152d7543bd9bf692551bbfa                                      │
+│ Reviewed-on: https://go-review.googlesource.com/c/go/+/702815                             │
+│ LUCI-TryBot-Result: Go LUCI <golang-scoped@luci-project-accounts.iam.gserviceaccount.com> │
+│ Reviewed-by: Michael Matloob <matloob@google.com>                                         │
+│ Auto-Submit: Alan Donovan <adonovan@google.com>                                           │
+╰───────────────────────────────────────────────────────────────────────────────────────────╯
 
-- Title starts with a package prefix
-- Title is under 54 characters
-- Missing "PR: <number>" metadata line
 
-Verdict: LINT_FAIL
+╭─────────────────────────────────────────────────────────────── Lint Output for "go" ───────────────────────────────────────────────────────────────╮
+│ **Title Analysis**                                                                                                                                 │
+│ The subject starts with "cmd/go/internal/work:" followed by a space, which is correct according to the requirement.                                │
+│                                                                                                                                                    │
+│ **Body Analysis**                                                                                                                                  │
+│ The body explains why the change was made and what problem it fixes. It also provides relevant details about the changes and includes references   │
+│ (CL 702835). The body is well-structured and easy to understand.                                                                                   │
+│                                                                                                                                                    │
+│ **Rule Compliance Summary**                                                                                                                        │
+│                                                                                                                                                    │
+│ * **Subject**: PASS                                                                                                                                │
+│         + Starts with package name: cmd/go/internal/work:                                                                                          │
+│         + Uses lowercase verb after colon: copy                                                                                                    │
+│         + No trailing period at the end of subject line                                                                                            │
+│         + Short enough (~76 characters or less)                                                                                                    │
+│ * **Body**: PASS                                                                                                                                   │
+│         + Separate subject from body by a blank line                                                                                               │
+│         + Body lines are wrapped at ~76 characters                                                                                                 │
+│         + Explains why the change was made and what problem it fixes                                                                               │
+│ * **Footer/References**: PASS                                                                                                                      │
+│         + Includes CL 702835 reference                                                                                                             │
+│ * **General Style**: PASS                                                                                                                          │
+│         + Does not use Signed-off-by lines                                                                                                         │
+│         + Avoids alternate aliases (e.g., "Close")                                                                                                 │
+│ * **Summary-Length Formatting**: PASS                                                                                                              │
+│         + Subject is short enough (~76 characters or less)                                                                                         │
+│         + Body lines are wrapped at ~76 characters                                                                                                 │
+│                                                                                                                                                    │
+│ **Verdict: LINT_PASS**                                                                                                                             │
+╰────────────────────────────────────────────────────────────────── Powered by LLM ──────────────────────────────────────────────────────────────────╯
+
+╭───────────────────────────────────────────────────────────────────── Verdict ──────────────────────────────────────────────────────────────────────╮
+│ ✅ Commit message passed all lint checks.                                                                                                          │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
+WARNING: Please double-check since LLMs can still make mistakes.
 ```
 
 ## Development Notes
