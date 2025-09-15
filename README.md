@@ -1,4 +1,4 @@
-# llmlinter
+# NaturalCommitLint
 ![Python](https://img.shields.io/badge/Python-3.8%2B-blue?logo=python&logoColor=white)
 ![Typer](https://img.shields.io/badge/CLI-Typer-blueviolet)
 ![Rich](https://img.shields.io/badge/UI-Rich-forestgreen)
@@ -15,7 +15,7 @@ AI-powered commit message linter with customizable rules.
 
 ## Overview
 
-`llmlinter` enforces consistent and high-quality Git commit messages using a locally running LLM. It reads the HEAD commit, applies a set of user-defined rules, and provides a verdict: `LINT_PASS` or `LINT_FAIL`.
+Tool that enforces consistent and high-quality Git commit messages using a locally running LLM. It reads the HEAD commit, applies a set of user-defined rules, and provides a verdict: `LINT_PASS` or `LINT_FAIL`.
 
 The LLM is instructed to include one of these tokens in its final response, which is then parsed by the tool.
 At the moment, this tool only analyzes the HEAD.
