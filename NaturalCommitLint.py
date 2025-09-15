@@ -317,7 +317,7 @@ Give a verdict in the form "LINT_FAIL | LINT_PASS" . The verdict should be the
 final line. E.g. 'Verdict: LINT_FAIL'.
 """
 
-    # AI an hallucinate and act unpredictably so try multiple times.
+    # AI can hallucinate and act unpredictably so try multiple times.
     no_of_attempts = 3
     for x in range(no_of_attempts):
         results = send_prompt_to_LLM(prompt, model)
