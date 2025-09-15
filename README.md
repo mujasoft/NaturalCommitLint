@@ -181,6 +181,7 @@ The verdict is extracted from the LLM output and must contain either `LINT_PASS`
 - Lint n commits
 - Lint a specific commit
 - Add automated testing
+- Add a fix mode
 
 ## License
 
