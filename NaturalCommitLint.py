@@ -40,12 +40,13 @@ from rich.panel import Panel
 
 
 app = typer.Typer(
-    help="AI powered tool to lint commit messages."
+    help="Use natural language to lint commit messages."
 )
 
 console = Console()
 
 
+# Helper functions ========================================================= #
 def read_text(filepath):
     """Given a filepath, returns contents of file.
 
@@ -265,16 +266,16 @@ def print_linter_output(results: str, repo: str):
                         + verdict_style))
 
 
+# Main functions ======================================================= #
 @app.command()
 def lint_head_commit_message(
     repo_dir: str = typer.Option(None, "--repo-dir", "-r",
-                                 help="Location of where the repo is cloned."),
+                                 help="Location of repo."),
     rules_filepath: str = typer.Option("rules.txt", "--rules-file", "-f",
-                                       help="Location of where your rules"
-                                            "reside as a txt file"),
+                                       help="Location of text file with "
+                                            "rules"),
     output: str = typer.Option(None, "--output", "-o",
-                               help="Location of where to save"
-                                    "llm powered output to a text file."),
+                               help="Location of where to save output"),
     model: str = typer.Option("llama3", "--model", "-m", help="Name of model.")
                              ):
     """Uses LLM to lint HEAD commit message."""
@@ -288,6 +289,7 @@ def lint_head_commit_message(
                             title=f"[cyan]Head Commit for \"{repo}\"[/]",
                             style="cyan")
                  )
+    console.print(f"\n[cyan] Linting will use \"{rules_filepath}\"")
     print("")
     prompt = f"""
 You are a Git commit message reviewer. Your goal is to evaluate whether the latest commit message follows all defined rules. Your tone should be formal, concise, and constructive. Do not use exclamation marks, emojis, or overly friendly phrasing.
