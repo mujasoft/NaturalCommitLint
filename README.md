@@ -7,7 +7,9 @@
 ![Status](https://img.shields.io/badge/Linting-AI--Powered-success)
 
 
-AI-powered commit message linter with customizable rules.
+A commit linter that uses natural language rules enforced by an LLM.
+
+Unlike regex-based linters, it’s customizable without code and can plug directly into CI/CD pipelines.
 
 ## Demo
 
