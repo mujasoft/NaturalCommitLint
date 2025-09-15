@@ -336,6 +336,7 @@ final line. E.g. 'Verdict: LINT_FAIL'.
     console.print("[bold yellow]WARNING: Please double-check since"
                   " LLMs can still make mistakes.[/]")
 
+    # In a jenkins job, this will help turn the job status 'red'.
     if "LINT_FAIL" in results:
         sys.exit()
 
