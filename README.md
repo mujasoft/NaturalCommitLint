@@ -25,7 +25,7 @@ At the moment, this tool only analyzes the HEAD.
 This tool is designed for use in both local development and CI pipelines.
 
 ## Why was this made?
-A lot of tools exist to lint commits but I wondered what would happen if we allowed a LLM to lint the commit for us? One big advantage is that the LLM takes care of analyzing how to detect linting violations which makes it very extensible across different codebases.
+A lot of tools exist to lint commits but I wondered what would happen if we allowed a LLM to lint the commit for us? One big advantage is that the LLM takes care of how to detect linting violations which makes it very extensible across different codebases. It can also do things beyond regex such as inspect tone and formality.
 
 ## Features
 
