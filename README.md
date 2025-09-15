@@ -99,6 +99,7 @@ The name of the file is not hardcoded. You can keep multiple different text file
 ## Sample Output
 
 ```
+./NaturalCommitLint.py -r ~/Desktop/development/go -f rules_go.txt
 
 ╭────────────────────────────────── Head Commit for "go" ───────────────────────────────────╮
 │ cmd/go/internal/work: copy vet tool's stdout to our stdout                                │
