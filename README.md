@@ -59,17 +59,16 @@ pip3 install -r requirements.txt
  Uses LLM to lint HEAD commit message.
 
 
-╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
-│ --repo-dir            -r      TEXT  Location of where the repo is cloned. [default: None]                                                          │
-│ --rules-file          -f      TEXT  Location of where your rulesreside as a txt file [default: rules.txt]                                          │
-│ --output              -o      TEXT  Location of where to savellm powered output to a text file. [default: None]                                    │
-│ --model               -m      TEXT  Name of model. [default: llama3]                                                                               │
-│ --install-completion                Install completion for the current shell.                                                                      │
-│ --show-completion                   Show completion for the current shell, to copy it or customize the installation.                               │
-│ --help                              Show this message and exit.                                                                                    │
-╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
-
-
+╭─ Options ──────────────────────────────────────────────────────────────────────────────────────────────────────╮
+│ --repo-dir            -r      TEXT  Location of repo. [default: None]                                          │
+│ --rules-file          -f      TEXT  Location of text file with rules [default: rules.txt]                      │
+│ --output              -o      TEXT  Location of where to save output [default: None]                           │
+│ --model               -m      TEXT  Name of model. [default: llama3]                                           │
+│ --install-completion                Install completion for the current shell.                                  │
+│ --show-completion                   Show completion for the current shell, to copy it or customize the         │
+│                                     installation.                                                              │
+│ --help                              Show this message and exit.                                                │
+╰────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 ```
 
 ### Arguments
