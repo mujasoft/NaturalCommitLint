@@ -43,15 +43,16 @@ Requirements:
 Clone the repository and install dependencies:
 
 ```bash
-git clone git@github.com:mujasoft/llmlinter.git
-cd llmlinter
+git clone git@github.com:mujasoft/NaturalCommitLint.git
+cd NaturalCommitLint
 pip3 install -r requirements.txt
+# You can simply add to your path afterwards or call from this location
 ```
 
 ## Usage
 
 ```bash
- Usage: llmlinter.py [OPTIONS]
+ Usage: NaturalCommitLint.py [OPTIONS]
 
  Uses LLM to lint HEAD commit message.
 
